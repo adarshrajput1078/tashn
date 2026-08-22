@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VK BHURIYA • ADMIN PANEL</title>
+    
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Rajdhani:wght@700;900&family=Fira+Code:wght@600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           🌟 NEON ADMIN THEME 
+           ========================================================================== */
+        :root { 
+            --bg-master: #050505; 
+            --bg-panel: #0a0a0c;
+            --neon-white: #ffffff;
+            --glow-white: rgba(255, 255, 255, 0.4);
+            --red: #ff3366; --glow-red: rgba(255, 51, 102, 0.4);
+            --green: #00ff88; --glow-green: rgba(0, 255, 136, 0.4);
+            --font-main: 'Rajdhani', sans-serif; 
+            --font-ui: 'Inter', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-master); color: #fff; font-family: var(--font-ui); padding: 20px; overflow-x: hidden; }
+
+        /* 🔐 LOCK SCREEN */
+        #lockScreen { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(5,5,5,0.95); z-index: 9999; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            backdrop-filter: blur(15px); 
+        }
+        .lock-box { 
+            background: var(--bg-panel); padding: 40px 30px; border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.15); text-align: center; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,255,255,0.02); 
+            width: 90%; max-width: 380px; animation: popIn 0.5s ease;
+        }
+        .lock-box h1 { font-family: var(--font-main); color: var(--neon-white); font-size: 2.2rem; letter-spacing: 2px; margin-bottom: 5px; text-shadow: 0 0 10px var(--glow-white); }
+        .lock-box p { color: #888; font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 25px; text-transform: uppercase; }
+        .lock-box input { 
+            width: 100%; padding: 16px; margin-bottom: 20px; background: #000; 
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; 
+            color: #fff; font-size: 1.2rem; text-align: center; outline: none; transition: 0.3s; 
+            font-family: var(--font-mono); font-weight: 800; letter-spacing: 3px;
+        }
+        .lock-box input:focus { border-color: var(--neon-white); box-shadow: 0 0 15px var(--glow-white); }
+        .btn-unlock { 
+            width: 100%; padding: 16px; background: var(--neon-white); color: #000; 
+            border: none; border-radius: 12px; font-weight: 900; font-family: var(--font-main); 
+            font-size: 1.2rem; letter-spacing: 2px; cursor: pointer; transition: 0.2s; 
+            box-shadow: 0 0 15px var(--glow-white); 
+        }
+        .btn-unlock:active { transform: scale(0.95); box-shadow: 0 0 5px var(--glow-white); }
+
+        /* 🎛️ DASHBOARD HEADER */
+        .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+        .header h1 { font-family: var(--font-main); font-size: 2.5rem; text-shadow: 0 0 15px var(--glow-white); line-height: 1; }
+        .header span { font-family: var(--font-mono); font-size: 0.8rem; color: #888; background: #111; padding: 5px 10px; border-radius: 6px; border: 1px solid #333; }
+
+        /* 🗂️ GRID LAYOUT */
+        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
+        
+        .card { 
+            background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.08); 
+            border-radius: 18px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            position: relative; overflow: hidden;
+        }
+        .card h2 { font-family: var(--font-main); font-size: 1.4rem; color: var(--neon-white); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; letter-spacing: 1px; }
+        .badge { background: var(--red); color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 0.9rem; font-family: var(--font-mono); box-shadow: 0 0 10px var(--glow-red); }
+
+        /* INPUTS & BUTTONS */
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; font-size: 0.75rem; color: #aaa; margin-bottom: 8px; text-transform: uppercase; font-weight: 800; letter-spacing: 1.5px; }
+        .input-group input { width: 100%; padding: 14px; background: #000; border: 1px solid #333; border-radius: 10px; color: #fff; font-family: var(--font-mono); font-size: 0.95rem; outline: none; transition: 0.3s; }
+        .input-group input:focus { border-color: var(--neon-white); box-shadow: 0 0 10px rgba(255,255,255,0.1); }
+        
+        /* SLEEK TOGGLE SWITCH */
+        .toggle-wrapper { display: flex; align-items: center; justify-content: space-between; background: #000; padding: 15px; border-radius: 10px; border: 1px solid #333; margin-bottom: 20px; }
+        .toggle-label { font-size: 0.85rem; font-weight: 800; color: var(--red); letter-spacing: 1px; }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: #aaa; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--red); box-shadow: 0 0 10px var(--glow-red); }
+        input:checked + .slider:before { transform: translateX(20px); background-color: #fff; }
+
+        /* ACTION BUTTONS */
+        .btn { width: 100%; padding: 14px; font-size: 1rem; font-weight: 900; font-family: var(--font-main); letter-spacing: 2px; border: none; border-radius: 10px; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+        .btn:active { transform: scale(0.96); }
+        .btn-save { background: var(--neon-white); color: #000; box-shadow: 0 0 15px var(--glow-white); }
+        .btn-green { background: var(--green); color: #000; box-shadow: 0 0 10px var(--glow-green); }
+        .btn-red { background: var(--red); color: #fff; box-shadow: 0 0 10px var(--glow-red); }
+        .btn-dark { background: #111; color: #fff; border: 1px solid #333; }
+        
+        /* PENDING REQUESTS LIST */
+        .request-item { background: #000; border: 1px solid #222; padding: 15px; border-radius: 12px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 12px; transition: 0.3s; }
+        .request-item:hover { border-color: rgba(255,255,255,0.2); }
+        .req-uid { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 800; color: #fff; }
+        .req-actions { display: flex; gap: 10px; }
+
+        /* TOAST */
+        #toast { position: fixed; top: 20px; right: 20px; background: var(--neon-white); color: #000; padding: 15px 25px; border-radius: 10px; font-weight: 900; font-family: var(--font-ui); transform: translateX(150%); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999; box-shadow: 0 10px 30px rgba(255,255,255,0.3); border: 1px solid #fff; }
+        #toast.show { transform: translateX(0); }
+
+        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <!-- 🔐 SIMPLE SECURITY LOCK -->
+    <div id="lockScreen">
+        <div class="lock-box">
+            <h1>DEV SERVER</h1>
+            <p>Admin Authorization Required</p>
+            <input type="password" id="adminPass" placeholder="••••••••">
+            <button class="btn-unlock" onclick="unlockAdmin()">VERIFY ACCESS</button>
+        </div>
+    </div>
+
+    <div id="toast">ACTION SUCCESSFUL</div>
+
+    <!-- 🎛️ DASHBOARD HEADER -->
+    <div class="header">
+        <div>
+            <h1>VK BHURIYA <span style="color:#555; font-weight:300;">| DEV</span></h1>
+        </div>
+        <span>⚡ LIVE SYNC</span>
+    </div>
+
+    <div class="container">
+        
+        <!-- ⚙️ APP SETTINGS MANAGER -->
+        <div class="card">
+            <h2>⚙️ APP CONFIGURATION</h2>
+            
+            <div class="input-group">
+                <label>Game Iframe URL</label>
+                <input type="text" id="setGameLink" placeholder="https://www.ts777.info/#/register...">
+            </div>
+            
+            <div class="input-group">
+                <label>Admin Support (Telegram)</label>
+                <input type="text" id="setAdminTg" placeholder="https://t.me/DevArmy">
+            </div>
+
+            <div class="input-group">
+                <label>App Version Label</label>
+                <input type="text" id="setAppVersion" placeholder="V 3.0">
+            </div>
+
+            <div class="toggle-wrapper">
+                <span class="toggle-label">APP MAINTENANCE LOCK</span>
+                <label class="switch">
+                    <input type="checkbox" id="setMaintenance">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <button class="btn btn-save" onclick="Admin.saveSettings()">PUSH TO LIVE SERVER</button>
+        </div>
+
+        <!-- 🔔 PENDING APPROVALS -->
+        <div class="card">
+            <h2>🔔 PENDING REQUESTS <span id="reqCount" class="badge">0</span></h2>
+            <div id="requestsList" style="max-height: 420px; overflow-y: auto; padding-right: 5px;">
+                <p style="color:#555; text-align:center; margin-top:20px; font-family:var(--font-mono);">Server idle. No requests.</p>
+            </div>
+        </div>
+
+        <!-- 🛠️ MANUAL UID CONTROL -->
+        <div class="card">
+            <h2>🛠️ OVERRIDE UID</h2>
+            <div class="input-group">
+                <label>Target Game UID</label>
+                <input type="number" id="manualUid" placeholder="Enter User ID">
+            </div>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <button class="btn btn-green" onclick="Admin.manualAction('approve')">GRANT VIP ACCESS</button>
+                <button class="btn btn-red" onclick="Admin.manualAction('ban')">BAN FROM SYSTEM</button>
+                <button class="btn btn-dark" onclick="Admin.manualAction('unban')">REVOKE BAN</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ⚡ FIREBASE SDK ⚡ -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, get, set, update, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        // 🔥 FIREBASE RR-RENTAL CONFIG 🔥
+        const firebaseConfig = {
+            apiKey: "AIzaSyA460iWlzdbX8G2iFGGThXReVF5xzW1ZWQ",
+            authDomain: "rr-rental.firebaseapp.com",
+            databaseURL: "https://rr-rental-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "rr-rental",
+            storageBucket: "rr-rental.firebasestorage.app",
+            messagingSenderId: "69307478861",
+            appId: "1:69307478861:web:f237ad774f2bf4c20ffd04"
+        };
+        const app = initializeApp(firebaseConfig); 
+        const db = getDatabase(app);
+
+        // Security Lock Logic
+        window.unlockAdmin = function() {
+            const pass = document.getElementById('adminPass').value;
+            if(pass === "ADMIN123") { // <-- SET YOUR ADMIN PASSWORD HERE
+                document.getElementById('lockScreen').style.opacity = '0';
+                setTimeout(() => document.getElementById('lockScreen').style.display = 'none', 300);
+                Admin.init();
+            } else {
+                Admin.toast("INCORRECT PASSWORD", true);
+            }
+        }
+
+        window.Admin = class {
+            static init() {
+                this.loadSettings();
+                this.listenRequests();
+            }
+
+            static toast(msg, isError = false) {
+                const t = document.getElementById('toast');
+                t.innerText = msg;
+                t.style.background = isError ? "var(--red)" : "var(--neon-white)";
+                t.style.color = isError ? "#fff" : "#000";
+                t.style.borderColor = isError ? "#ff6688" : "#fff";
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 3000);
+            }
+
+            // ⚙️ 1. LOAD SETTINGS FROM DB
+            static loadSettings() {
+                onValue(ref(db, 'settings'), (snap) => {
+                    if(snap.exists()) {
+                        let data = snap.val();
+                        document.getElementById('setGameLink').value = data.game_link || "";
+                        document.getElementById('setAdminTg').value = data.admin_telegram || "";
+                        document.getElementById('setAppVersion').value = data.app_version || "";
+                        document.getElementById('setMaintenance').checked = data.maintenance || false;
+                    }
+                });
+            }
+
+            // 🚀 2. SAVE SETTINGS TO DB
+            static async saveSettings() {
+                const gLink = document.getElementById('setGameLink').value.trim();
+                const tgLink = document.getElementById('setAdminTg').value.trim();
+                const vDisplay = document.getElementById('setAppVersion').value.trim();
+                const maint = document.getElementById('setMaintenance').checked;
+
+                try {
+                    await set(ref(db, 'settings'), {
+                        game_link: gLink,
+                        admin_telegram: tgLink,
+                        app_version: vDisplay,
+                        maintenance: maint
+                    });
+                    this.toast("✅ SERVER SYNCED!");
+                } catch(e) {
+                    this.toast("❌ SYNC FAILED", true);
+                }
+            }
+
+            // 🔔 3. LISTEN FOR NEW UID REQUESTS
+            static listenRequests() {
+                onValue(ref(db, 'uid_requests'), (snap) => {
+                    const list = document.getElementById('requestsList');
+                    const countEl = document.getElementById('reqCount');
+                    list.innerHTML = "";
+                    
+                    if(!snap.exists()) {
+                        countEl.innerText = "0";
+                        list.innerHTML = '<p style="color:#555; text-align:center; margin-top:20px; font-family:var(--font-mono);">Server idle. No requests.</p>';
+                        return;
+                    }
+
+                    const reqs = snap.val();
+                    let count = 0;
+
+                    for(let uid in reqs) {
+                        count++;
+                        list.innerHTML += `
+                            <div class="request-item">
+                                <span class="req-uid">ID: ${uid}</span>
+                                <div class="req-actions">
+                                    <button class="btn btn-green" onclick="Admin.approveUid('${uid}')">APPROVE</button>
+                                    <button class="btn btn-red" onclick="Admin.rejectUid('${uid}')">REJECT</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    countEl.innerText = count;
+                });
+            }
+
+            // ✅ 4. APPROVE UID
+            static async approveUid(uid) {
+                try {
+                    await set(ref(db, 'approved_uids/' + uid), { is_banned: false, approved_at: Date.now() });
+                    await remove(ref(db, 'uid_requests/' + uid));
+                    this.toast(`✅ UID ${uid} APPROVED!`);
+                } catch(e) { this.toast("ERROR APROVING", true); }
+            }
+
+            // ❌ 5. REJECT UID
+            static async rejectUid(uid) {
+                try {
+                    await remove(ref(db, 'uid_requests/' + uid));
+                    this.toast(`🗑️ UID DELETED`);
+                } catch(e) { this.toast("ERROR REJECTING", true); }
+            }
+
+            // 🛠️ 6. MANUAL ACTIONS
+            static async manualAction(action) {
+                const uid = document.getElementById('manualUid').value.trim();
+                if(!uid) return this.toast("INPUT REQUIRED!", true);
+
+                try {
+                    if (action === 'approve') {
+                        await set(ref(db, 'approved_uids/' + uid), { is_banned: false, updated_at: Date.now() });
+                        await remove(ref(db, 'uid_requests/' + uid));
+                        this.toast(`✅ VIP GRANTED TO ${uid}`);
+                    } 
+                    else if (action === 'ban') {
+                        await update(ref(db, 'approved_uids/' + uid), { is_banned: true });
+                        this.toast(`🛑 UID ${uid} BANNED`);
+                    }
+                    else if (action === 'unban') {
+                        await update(ref(db, 'approved_uids/' + uid), { is_banned: false });
+                        this.toast(`🔄 UID ${uid} UNBANNED`);
+                    }
+                    document.getElementById('manualUid').value = "";
+                } catch(e) {
+                    this.toast("❌ ACTION FAILED", true);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
